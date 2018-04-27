@@ -4,6 +4,11 @@
 
     }
 
+    function cleanPost () {
+        unset($_POST);
+        header('Location: /index.php');
+    }
+
     function strRep($a, $b, $c)
     {
         $c = str_replace($a, $b, $c);

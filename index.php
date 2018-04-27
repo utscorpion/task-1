@@ -10,11 +10,15 @@
         exFile ($file);
         if (isset($_POST['submit'])) {
             if (file_exists($file) && isset($_POST['name']) && isset($_POST['date']) && isset($_POST['number']) && isset($_POST['month']) && (int)$_POST['month']!=0 && (int)$_POST['number']!=0) {
-                include_once('php/output.php');
+                echo createText(makeDate());
+                include_once('html/output.html');
             }
             else {
                 echo 'Check Data';
             }
+        }
+        elseif (isset($_POST['mainPage'])) {
+            cleanPost();
         }
         else {
             include_once('html/input.html');
