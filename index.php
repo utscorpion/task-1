@@ -1,27 +1,21 @@
 <?php
-    session_start();
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
-    include ('makeDate.php');
     include('form.html');
-    if (isset($_POST['submit'])) {
-        if(isset($_POST['name']) && isset($_POST['date']) && isset($_POST['number']) ) {
-            //header('Location: /res.php');
-            echo makeDate();
-            //include ('res.php');
-        } else {
-            echo 'Check data';
+    include ('makeDate.php');
+    if (isset($argv)) {
+        echo makeDateCons($argv);
+    } else {
+       // include('form.html');
+        if (isset($_POST['submit'])) {
+            if (isset($_POST['name']) && isset($_POST['date']) && isset($_POST['number']) && isset($_POST['month']) && (int)$_POST['month']!=0 && (int)$_POST['number']!=0) {
+                echo makeDate();
+            }
+            else {
+                echo 'Check Data';
+            }
         }
     }
-
-    
-
-    /*$toStr = str_replace("%USERNAME%", $USERNAME, "$toStr");
-    $toStr = str_replace("%EXECDATE%", $EXECDATE, "$toStr");
-    $toStr = str_replace("%MONTHNUM%", $MONTHNUM, "$toStr");
-    $toStr = str_replace("%ENDDATE%", $ENDDATE, "$toStr");
-    $toStr = str_replace("%NUMBER%", $NUMBER, "$toStr");*/
-   // echo  strRep("%USERNAME%", $USERNAME, $toStr);
 
 
 
