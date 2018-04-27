@@ -1,100 +1,79 @@
 <?php
+    $file = 'template.tpl';
+    function errors () {
+
+    }
+
     function strRep($a, $b, $c)
     {
         $c = str_replace($a, $b, $c);
         return $c;
     }
 
-    function exFile ($filename) {
-        if (file_exists($filename)) {
-            $arrFile = file($filename);
+    function exFile ($file) {
+        if (file_exists($file)) {
+            $arrFile = file($file);
             return $arrFile;
         } else {
-            echo "Файл $filename не существует";
+            exit("Файла $file не существует  или невозможно загрузить");
         }
     }
 
     function makeDate ()
-    {
-        $USERNAME = ucfirst(strtolower($_POST['name']));
-        $EXECDATE = $_POST['date'];
-        $NUMBER = (int)$_POST['number'];
-        $arrDate = explode('-', $EXECDATE);
-        $MONTHNUM = $_POST['month'];
-        $ENDDATE = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $MONTHNUM, $arrDate[2], $arrDate[0]));
-        $EXECDATE = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
+        {
+            $arrUserInfo = [];
+            $EXECDATE = $_POST['date'];
+            $arrUserInfo[1] = $_POST['number'];
+            $arrDate = explode('-', $EXECDATE);
+            $arrUserInfo[3] = $_POST['month'];
+            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
+            $arrUserInfo[2] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
+            $arrUserInfo[0] = ucfirst(strtolower($_POST['name']));
+           return $arrUserInfo;
+        }
 
-        $toStr = implode('<br>', exFile('template.tpl'));
-        $regExp = '/[%]\w+[%]/';
-        preg_match_all($regExp, $toStr, $matches);
-        $arr = $matches[0];
-        $arr2 = [];
-        for ($j = 0; $j < 5; ++$j) {
-            switch ($j) {
-                case 0:
-                    $arr2[$j] = [$arr[$j] => $USERNAME];
-                    break;
-                case 1:
-                    $arr2[$j] = [$arr[$j] => $NUMBER];
-                    break;
-                case 2:
-                    $arr2[$j] = [$arr[$j] => $EXECDATE];
-                    break;
-                case 3:
-                    $arr2[$j] = [$arr[$j] => $MONTHNUM];
-                    break;
-                case 4:
-                    $arr2[$j] = [$arr[$j] => $ENDDATE];
-                    break;
+    function makeDateCLI ($arrCon)
+        {
+            $arrUserInfo = [];
+            if ((int)$arrCon[2] != 0 && (int)$arrCon[3] != 0) {
+                $arrUserInfo[1] = (int)$arrCon[2];
+                $arrUserInfo[3] = (int)$arrCon[3];
+            } else {
+                exit('Input correct data');
             }
+            $arrUserInfo[0] = ucfirst(strtolower($arrCon[1]));
+            $arrUserInfo[2] = date('d-m-Y');
+            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arrCon[3], date("d"), date("Y")));
+            return $arrUserInfo;
         }
-        for ($i = 0; $i < count($arr2); $i++) {
-            foreach ($arr2[$i] as $key => $value) {
-                $toStr = strRep($key, $value, $toStr);
-            }
-        }
-        return $toStr;
-    }
 
-    function makeDateCons ($arrCon)
-    {
-        $USERNAME = ucfirst(strtolower($arrCon[1]));
-        $EXECDATE = date('d-m-Y');
-        if((int)$arrCon[2]!=0 && (int)$arrCon[3]!=0) {
-            $NUMBER = (int)$arrCon[2];
-            $MONTHNUM = (int)$arrCon[3];
-        }
-        else {
-            exit('Input correct data');
-        }
-        $ENDDATE = date("d-m-Y", mktime(0, 0, 0, date("m")+$MONTHNUM, date("d"),   date("Y")));
-        $arrFile = file('template.tpl');
+    function createText ($arrUserInfo) {
         $toStr = implode(' ', exFile('template.tpl'));
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
-        $arr = $matches[0];
-        $arr2 = [];
+        $arrTemplate = $matches[0];
+        $arrRes = [];
         for ($j = 0; $j < 5; ++$j) {
             switch ($j) {
                 case 0:
-                    $arr2[$j] = [$arr[$j] => $USERNAME];
+                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
                     break;
                 case 1:
-                    $arr2[$j] = [$arr[$j] => $NUMBER];
+                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
                     break;
                 case 2:
-                    $arr2[$j] = [$arr[$j] => $EXECDATE];
+                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
                     break;
                 case 3:
-                    $arr2[$j] = [$arr[$j] => $MONTHNUM];
+                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
                     break;
                 case 4:
-                    $arr2[$j] = [$arr[$j] => $ENDDATE];
+                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
                     break;
             }
         }
-        for ($i = 0; $i < count($arr2); $i++) {
-            foreach ($arr2[$i] as $key => $value) {
+        for ($i = 0; $i < count($arrRes); $i++) {
+            foreach ($arrRes[$i] as $key => $value) {
                 $toStr = strRep($key, $value, $toStr);
             }
         }

@@ -1,5 +1,5 @@
 <?php
-    echo makeDate();
+    echo createText(makeDate());
 ?>
 <form class="form-horizontal" method="post">
     <div class="form-group">
