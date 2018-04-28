@@ -1,15 +1,19 @@
 <?php
     $file = 'template.tpl';
-    function errors () {
 
+    function checkData ()
+    {
+        if (file_exists('template.tpl') && isset($_POST['name']) && isset($_POST['date']) &&
+            isset($_POST['number']) && isset($_POST['month']) && (int)$_POST['month']!==0 && (int)$_POST['number']!==0)
+        {
+            return true;
+        } else {
+          return false;
+        }
     }
 
-    function cleanPost () {
-        unset($_POST);
-        header('Location: /index.php');
-    }
-
-    function exFile ($file) {
+    function exFile ($file)
+    {
         if (file_exists($file)) {
             $arrFile = file($file);
             return $arrFile;
@@ -19,34 +23,35 @@
     }
 
     function makeDate ()
-        {
-            $arrUserInfo = [];
-            $EXECDATE = $_POST['date'];
-            $arrUserInfo[1] = $_POST['number'];
-            $arrDate = explode('-', $EXECDATE);
-            $arrUserInfo[3] = $_POST['month'];
-            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
-            $arrUserInfo[2] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
-            $arrUserInfo[0] = ucfirst(strtolower($_POST['name']));
-           return $arrUserInfo;
-        }
+    {
+        $arrUserInfo = [];
+        $EXECDATE = $_POST['date'];
+        $arrUserInfo[1] = $_POST['number'];
+        $arrDate = explode('-', $EXECDATE);
+        $arrUserInfo[3] = $_POST['month'];
+        $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
+        $arrUserInfo[2] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
+        $arrUserInfo[0] = ucfirst(strtolower($_POST['name']));
+       return $arrUserInfo;
+    }
 
     function makeDateCLI ($arrCon)
-        {
-            $arrUserInfo = [];
-            if ((int)$arrCon[2] != 0 && (int)$arrCon[3] != 0) {
-                $arrUserInfo[1] = (int)$arrCon[2];
-                $arrUserInfo[3] = (int)$arrCon[3];
-            } else {
-                exit('Input correct data');
-            }
-            $arrUserInfo[0] = ucfirst(strtolower($arrCon[1]));
-            $arrUserInfo[2] = date('d-m-Y');
-            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arrCon[3], date("d"), date("Y")));
-            return $arrUserInfo;
+    {
+        $arrUserInfo = [];
+        if ((int)$arrCon[2] !== 0 && (int)$arrCon[3] !== 0) {
+            $arrUserInfo[1] = (int)$arrCon[2];
+            $arrUserInfo[3] = (int)$arrCon[3];
+        } else {
+            exit('Please, use correct data type');
         }
+        $arrUserInfo[0] = ucfirst(strtolower($arrCon[1]));
+        $arrUserInfo[2] = date('d-m-Y');
+        $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arrCon[3], date("d"), date("Y")));
+        return $arrUserInfo;
+    }
 
-    function createText ($arrUserInfo) {
+    function createText ($arrUserInfo)
+    {
         $toStr = implode('', exFile('template.tpl'));
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);

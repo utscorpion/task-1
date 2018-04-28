@@ -9,18 +9,15 @@
         include_once 'html/header.html';
         exFile ($file);
         if (isset($_POST['submit'])) {
-            if (file_exists($file) && isset($_POST['name']) && isset($_POST['date']) && isset($_POST['number']) && isset($_POST['month']) && (int)$_POST['month']!==0 && (int)$_POST['number']!==0) {
+            if (checkData () ) {
                 echo createText(makeDate());
                 include_once 'html/output.html';
+            } else {
+                echo 'Please, fill all fields and use correct data type';
             }
-            else {
-                echo 'Check Data';
-            }
-        }
-        elseif (isset($_POST['mainPage'])) {
-            cleanPost();
-        }
-        else {
+        } elseif (isset($_POST['mainPage'])) {
+            header('Location: /index.php');
+        } else {
             include_once 'html/input.html';
         }
     }
