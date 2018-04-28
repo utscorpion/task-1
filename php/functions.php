@@ -9,12 +9,6 @@
         header('Location: /index.php');
     }
 
-    function strRep($a, $b, $c)
-    {
-        $c = str_replace($a, $b, $c);
-        return $c;
-    }
-
     function exFile ($file) {
         if (file_exists($file)) {
             $arrFile = file($file);
@@ -53,7 +47,7 @@
         }
 
     function createText ($arrUserInfo) {
-        $toStr = implode(' ', exFile('template.tpl'));
+        $toStr = implode('', exFile('template.tpl'));
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
         $arrTemplate = $matches[0];
@@ -79,7 +73,7 @@
         }
         for ($i = 0; $i < count($arrRes); $i++) {
             foreach ($arrRes[$i] as $key => $value) {
-                $toStr = strRep($key, $value, $toStr);
+                $toStr = str_replace($key, $value, $toStr);
             }
         }
         return $toStr;
