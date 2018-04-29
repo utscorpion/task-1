@@ -57,12 +57,12 @@
         $toStr = implode('', exFile('template.tpl'));
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
-        $arrTemplate = [];
-        foreach ($matches[0] as $elem) {
+        $arrTemplate = $matches[0];
+       /* foreach ($matches[0] as $elem) {
             $elem = str_replace("%", "",$elem);
             $arrTemplate[] .= $elem;
         };
-        print_r($arrTemplate);
+        print_r($arrTemplate);*/
         $arrRes = [];
         for ($j = 0; $j < 5; ++$j) {
 
@@ -87,7 +87,6 @@
         print_r($arrRes);
         for ($i = 0; $i < count($arrRes); $i++) {
             foreach ($arrRes[$i] as $key => $value) {
-                echo '<br>'.$value;
                 $toStr = str_replace($key, $value, $toStr);
             }
         }
