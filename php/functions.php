@@ -92,5 +92,6 @@
                 $toStr = str_replace($key, $value, $toStr);
             }
         }
+
         return $toStr;
     }
