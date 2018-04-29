@@ -6,8 +6,10 @@
         if (file_exists('template.tpl') && isset($_POST['name']) && isset($_POST['date']) &&
             isset($_POST['number']) && isset($_POST['month']) && (int)$_POST['month']!==0 && (int)$_POST['number']!==0)
         {
+
             return true;
         } else {
+
           return false;
         }
     }
@@ -25,14 +27,14 @@
     function makeDate ()
     {
         $arrUserInfo = [];
-        $EXECDATE = $_POST['date'];
+        $execdate = $_POST['date'];
         $arrUserInfo[1] = $_POST['number'];
-        $arrDate = explode('-', $EXECDATE);
+        $arrDate = explode('-', $execdate);
         $arrUserInfo[3] = $_POST['month'];
         $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
         $arrUserInfo[2] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
         $arrUserInfo[0] = ucfirst(strtolower(trim($_POST['name'])));
-        print_r($arrUserInfo);
+
         return $arrUserInfo;
     }
 
@@ -48,7 +50,7 @@
         $arrUserInfo[0] = ucfirst(strtolower($arrCon[1]));
         $arrUserInfo[2] = date('d-m-Y');
         $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arrCon[3], date("d"), date("Y")));
-        print_r($arrUserInfo);
+
         return $arrUserInfo;
     }
 
@@ -58,11 +60,11 @@
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
         $arrTemplate = $matches[0];
-       /* foreach ($matches[0] as $elem) {
+        foreach ($matches[0] as $elem) {
             $elem = str_replace("%", "",$elem);
             $arrTemplate[] .= $elem;
         };
-        print_r($arrTemplate);*/
+
         $arrRes = [];
         for ($j = 0; $j < 5; ++$j) {
 
@@ -84,7 +86,7 @@
                     break;
             }
         }
-        print_r($arrRes);
+
         for ($i = 0; $i < count($arrRes); $i++) {
             foreach ($arrRes[$i] as $key => $value) {
                 $toStr = str_replace($key, $value, $toStr);
