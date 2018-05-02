@@ -24,35 +24,62 @@
         }
     }
 
-    function makeDate ()
+    function makeDateCli ($arr)
     {
         $arrUserInfo = [];
-        $execdate = $_POST['date'];
-        $arrUserInfo[1] = $_POST['number'];
-        $arrDate = explode('-', $execdate);
-        $arrUserInfo[3] = $_POST['month'];
-        $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
-        $arrUserInfo[2] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
-        $arrUserInfo[0] = ucfirst(strtolower(trim($_POST['name'])));
 
-        return $arrUserInfo;
+            if ((int)$arr[2] !== 0 && (int)$arr[3] !== 0) {
+                $arrUserInfo[1] = (int)$arr[2];
+                $arrUserInfo[3] = (int)$arr[3];
+            } else {
+                exit('Please, use correct data type');
+            }
+            $arrUserInfo[0] = ucfirst(strtolower($arr[1]));
+            $arrUserInfo[2] = date('d-m-Y');
+            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arr[3], date("d"), date("Y")));
+
+            return $arrUserInfo;
+
     }
 
-    function makeDateCLI ($arrCon)
+    function makeDate ($arr)
     {
         $arrUserInfo = [];
-        if ((int)$arrCon[2] !== 0 && (int)$arrCon[3] !== 0) {
-            $arrUserInfo[1] = (int)$arrCon[2];
-            $arrUserInfo[3] = (int)$arrCon[3];
+
+        if (isset($_POST) && count($_POST)>0) {
+            $execdate = $_POST['date'];
+            $arrUserInfo[1] = $_POST['number'];
+            $arrDate = explode('-', $execdate);
+            $arrUserInfo[3] = $_POST['month'];
+            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
+            $arrUserInfo[2] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
+            $arrUserInfo[0] = ucfirst(strtolower(trim($_POST['name'])));
+
+            return $arrUserInfo;
         } else {
-            exit('Please, use correct data type');
-        }
-        $arrUserInfo[0] = ucfirst(strtolower($arrCon[1]));
-        $arrUserInfo[2] = date('d-m-Y');
-        $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arrCon[3], date("d"), date("Y")));
+            if ((int)$arr[2] !== 0 && (int)$arr[3] !== 0) {
+                $arrUserInfo[1] = (int)$arr[2];
+                $arrUserInfo[3] = (int)$arr[3];
+            } else {
+                exit('Please, use correct data type');
+            }
+            $arrUserInfo[0] = ucfirst(strtolower($arr[1]));
+            $arrUserInfo[2] = date('d-m-Y');
+            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arr[3], date("d"), date("Y")));
 
-        return $arrUserInfo;
+            return $arrUserInfo;
+        }
     }
+
+    function parseTpl () {
+        $toStr = implode('', exFile('template.tpl'));
+        $regExp = '/[%]\w+[%]/';
+        preg_match_all($regExp, $toStr, $matches);
+        $arrTemplate = $matches[0];
+        return $arrTemplate;
+    }
+
+
 
     function createText ($arrUserInfo)
     {
@@ -60,10 +87,7 @@
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
         $arrTemplate = $matches[0];
-        foreach ($matches[0] as $elem) {
-            $elem = str_replace("%", "",$elem);
-            $arrTemplate[] .= $elem;
-        };
+
 
         $arrRes = [];
         for ($j = 0; $j < 5; ++$j) {
