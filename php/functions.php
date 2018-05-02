@@ -72,10 +72,34 @@
     }
 
     function parseTpl () {
+        $str = '';
         $toStr = implode('', exFile('template.tpl'));
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
-        $arrTemplate = $matches[0];
+        $arrTemplate = array_flip($matches[0]);
+        foreach ($arrTemplate as $key=>$value) {
+            switch ($key) {
+                case '%USERNAME%':
+                    $arrTemplate['%USERNAME%'] = 'name';
+                    break;
+                case '%NUMBER%':
+                    $arrTemplate['%NUMBER%'] = 'number';
+                    break;
+                case '%EXECDATE%':
+                    $arrTemplate['%EXECDATE%'] = 'execdate';
+                    break;
+                case '%MONTHNUM%':
+                    $arrTemplate['%MONTHNUM%'] = 'month';
+                    break;
+                case '%ENDDATE%':
+                    $arrTemplate['%ENDDATE%'] = 'enddate';
+                    break;
+            }
+
+        }
+        foreach ($arrTemplate as $key=>$value) {
+            $str .= $key.'-'.$value.'<br>';
+        }
         return $arrTemplate;
     }
 
@@ -83,7 +107,7 @@
 
     function createText ($arrUserInfo)
     {
-        $toStr = implode('', exFile('template.tpl'));
+        $toStr = implode('', file('template.tpl'));
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
         $arrTemplate = $matches[0];

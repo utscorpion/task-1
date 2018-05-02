@@ -10,8 +10,8 @@
         exFile ($file);
         if (isset($_POST['submit'])) {
             if (checkData () ) {
-                //var_dump(parseTpl());
-                echo createText(makeDate($_POST));
+                var_dump(parseTpl());
+                //echo createText(makeDate($_POST));
                 include_once 'html/output.html';
             } else {
                 echo 'Please, fill all fields and use correct data type';
