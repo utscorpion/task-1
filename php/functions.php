@@ -27,9 +27,8 @@
     function makeDateCli ($arr)
     {
         $arrUserInfo = [];
-
             if ((int)$arr[2] !== 0 && (int)$arr[3] !== 0) {
-                $arrUserInfo[1] = (int)$arr[2];
+                $arrUserInfo['number'] = (int)$arr[2];
                 $arrUserInfo[3] = (int)$arr[3];
             } else {
                 exit('Please, use correct data type');
@@ -39,40 +38,38 @@
             $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arr[3], date("d"), date("Y")));
 
             return $arrUserInfo;
-
     }
 
     function makeDate ($arr)
     {
         $arrUserInfo = [];
-
         if (isset($_POST) && count($_POST)>0) {
             $execdate = $_POST['date'];
-            $arrUserInfo[1] = $_POST['number'];
+            $arrUserInfo['number'] = $_POST['number'];
             $arrDate = explode('-', $execdate);
-            $arrUserInfo[3] = $_POST['month'];
-            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
-            $arrUserInfo[2] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
-            $arrUserInfo[0] = ucfirst(strtolower(trim($_POST['name'])));
+            $arrUserInfo['month'] = $_POST['month'];
+            $arrUserInfo['enddate'] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1] + $_POST['month'], $arrDate[2], $arrDate[0]));
+            $arrUserInfo['execdate'] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
+            $arrUserInfo['name'] = ucfirst(strtolower(trim($_POST['name'])));
 
             return $arrUserInfo;
         } else {
             if ((int)$arr[2] !== 0 && (int)$arr[3] !== 0) {
-                $arrUserInfo[1] = (int)$arr[2];
-                $arrUserInfo[3] = (int)$arr[3];
+                $arrUserInfo['number'] = (int)$arr[2];
+                $arrUserInfo['month'] = (int)$arr[3];
             } else {
                 exit('Please, use correct data type');
             }
-            $arrUserInfo[0] = ucfirst(strtolower($arr[1]));
-            $arrUserInfo[2] = date('d-m-Y');
-            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arr[3], date("d"), date("Y")));
+            $arrUserInfo['name'] = ucfirst(strtolower($arr[1]));
+            $arrUserInfo['execdate'] = date('d-m-Y');
+            $arrUserInfo['enddate'] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arr[3], date("d"), date("Y")));
 
             return $arrUserInfo;
         }
     }
 
-    function parseTpl () {
-        $str = '';
+    function createText ($arrUserInfo)
+    {
         $toStr = implode('', exFile('template.tpl'));
         $regExp = '/[%]\w+[%]/';
         preg_match_all($regExp, $toStr, $matches);
@@ -80,65 +77,24 @@
         foreach ($arrTemplate as $key=>$value) {
             switch ($key) {
                 case '%USERNAME%':
-                    $arrTemplate['%USERNAME%'] = 'name';
+                    $arrTemplate['%USERNAME%'] = $arrUserInfo['name'];
                     break;
                 case '%NUMBER%':
-                    $arrTemplate['%NUMBER%'] = 'number';
+                    $arrTemplate['%NUMBER%'] = $arrUserInfo['number'];
                     break;
                 case '%EXECDATE%':
-                    $arrTemplate['%EXECDATE%'] = 'execdate';
+                    $arrTemplate['%EXECDATE%'] = $arrUserInfo['execdate'];
                     break;
                 case '%MONTHNUM%':
-                    $arrTemplate['%MONTHNUM%'] = 'month';
+                    $arrTemplate['%MONTHNUM%'] = $arrUserInfo['month'];
                     break;
                 case '%ENDDATE%':
-                    $arrTemplate['%ENDDATE%'] = 'enddate';
-                    break;
-            }
-
-        }
-        foreach ($arrTemplate as $key=>$value) {
-            $str .= $key.'-'.$value.'<br>';
-        }
-        return $arrTemplate;
-    }
-
-
-
-    function createText ($arrUserInfo)
-    {
-        $toStr = implode('', file('template.tpl'));
-        $regExp = '/[%]\w+[%]/';
-        preg_match_all($regExp, $toStr, $matches);
-        $arrTemplate = $matches[0];
-
-
-        $arrRes = [];
-        for ($j = 0; $j < 5; ++$j) {
-
-            switch ($j) {
-                case 0:
-                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
-                    break;
-                case 1:
-                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
-                    break;
-                case 2:
-                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
-                    break;
-                case 3:
-                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
-                    break;
-                case 4:
-                    $arrRes[$j] = [$arrTemplate[$j] => $arrUserInfo[$j]];
+                    $arrTemplate['%ENDDATE%'] = $arrUserInfo['enddate'];
                     break;
             }
         }
-
-        for ($i = 0; $i < count($arrRes); $i++) {
-            foreach ($arrRes[$i] as $key => $value) {
-                $toStr = str_replace($key, $value, $toStr);
-            }
+        foreach ($arrTemplate as $key => $value) {
+            $toStr = str_replace($key, $value, $toStr);
         }
 
         return $toStr;
