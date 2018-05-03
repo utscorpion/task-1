@@ -4,8 +4,7 @@
     function checkData ()
     {
         if (file_exists('template.tpl') && isset($_POST['name']) && isset($_POST['date']) &&
-            isset($_POST['number']) && isset($_POST['month']) && (int)$_POST['month']!==0 && (int)$_POST['number']!==0)
-        {
+            isset($_POST['number']) && isset($_POST['month']) && (int)$_POST['month']!==0 && (int)$_POST['number']!==0) {
 
             return true;
         } else {
@@ -24,22 +23,6 @@
         }
     }
 
-    function makeDateCli ($arr)
-    {
-        $arrUserInfo = [];
-            if ((int)$arr[2] !== 0 && (int)$arr[3] !== 0) {
-                $arrUserInfo['number'] = (int)$arr[2];
-                $arrUserInfo[3] = (int)$arr[3];
-            } else {
-                exit('Please, use correct data type');
-            }
-            $arrUserInfo[0] = ucfirst(strtolower($arr[1]));
-            $arrUserInfo[2] = date('d-m-Y');
-            $arrUserInfo[4] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arr[3], date("d"), date("Y")));
-
-            return $arrUserInfo;
-    }
-
     function makeDate ($arr)
     {
         $arrUserInfo = [];
@@ -52,7 +35,6 @@
             $arrUserInfo['execdate'] = date("d-m-Y", mktime(0, 0, 0, $arrDate[1], $arrDate[2], $arrDate[0]));
             $arrUserInfo['name'] = ucfirst(strtolower(trim($_POST['name'])));
 
-            return $arrUserInfo;
         } else {
             if ((int)$arr[2] !== 0 && (int)$arr[3] !== 0) {
                 $arrUserInfo['number'] = (int)$arr[2];
@@ -63,9 +45,9 @@
             $arrUserInfo['name'] = ucfirst(strtolower($arr[1]));
             $arrUserInfo['execdate'] = date('d-m-Y');
             $arrUserInfo['enddate'] = date("d-m-Y", mktime(0, 0, 0, date("m") + (int)$arr[3], date("d"), date("Y")));
-
-            return $arrUserInfo;
         }
+
+        return $arrUserInfo;
     }
 
     function createText ($arrUserInfo)
